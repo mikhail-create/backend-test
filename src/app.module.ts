@@ -9,7 +9,7 @@ import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
-        envFilePath: '.env'
+        envFilePath: '.env',
     }),
     UsersModule,
     MongooseModule.forRoot(process.env.URI),
@@ -19,4 +19,5 @@ import { AuthModule } from './auth/auth.module';
   controllers: [AppController],
   providers: [AppService],
 })
+
 export class AppModule {}

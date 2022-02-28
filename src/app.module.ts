@@ -12,7 +12,7 @@ import { AuthModule } from './auth/auth.module';
         envFilePath: '.env'
     }),
     UsersModule,
-    MongooseModule.forRoot(`mongodb+srv://Mikhail:123321@cluster0.zjezr.mongodb.net/users?retryWrites=true&w=majority`),
+    MongooseModule.forRoot(process.env.URI),
     UsersModule,
     AuthModule
   ],

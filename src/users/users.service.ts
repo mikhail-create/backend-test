@@ -14,12 +14,13 @@ export class UsersService {
         return newUser.save()
     }
 
-    async getAllUsers(): Promise<User[]> {
-        return this.userModel.find().exec()
+    async getAllUsers() {
+        const allUsers = await this.userModel.find()
+        return allUsers
     }
 
-    async getUserByName(name: string) {
-        const user = await this.userModel.findOne({name: name, include: {all: true}}).exec()
+    async getUserByEmail(email: string) {
+        const user = await this.userModel.findOne({email: email, include: {all: true}}).exec()
         return user;
     }
 }

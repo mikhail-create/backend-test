@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 import { RolesGuard } from 'src/auth/roles-guard/roles-guard';
@@ -19,6 +19,12 @@ export class UsersController {
     @Get()
     getAll(): Promise<User[]> {
         return this.userService.getAllUsers()
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get(':id')
+    findOne(@Param('id') id: string) {
+      return this.userService.getUserById(id)
     }
 
     @ApiOperation({summary: 'Creating new user'})

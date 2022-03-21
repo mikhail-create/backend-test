@@ -9,20 +9,24 @@ export type UserDocument = User & Document
 @Schema()
 export class User {
 
-    @ApiProperty({example: 'test@mail.test', description: 'User email'})
-    @Prop({required: true})
+    @ApiProperty({ example: 'test@mail.test', description: 'User email' })
+    @Prop({ required: true })
     email: string
 
-    @ApiProperty({example: 'User', description: 'Username'})
-    @Prop({required: true})
+    @ApiProperty({ example: 'User', description: 'Username' })
+    @Prop({ required: true })
     name: string
 
-    @ApiProperty({example: 'password123', description: 'User password'})
-    @Prop({required: true})
+    @ApiProperty({ example: 'password123', description: 'User password' })
+    @Prop({ required: true })
     password: string
 
-    @ApiProperty({example: true, description: 'Mark for admin permissions'})
-    @Prop({type: [{type: mongoose.Schema.Types.String}], default: RolesEnum.User})
+    @ApiProperty({ example: 'GROUP-101', description: 'Student group' })
+    @Prop({ required: true, default: "GROUP UNSET" })
+    group: string
+
+    @ApiProperty({ example: true, description: 'Mark for admin permissions' })
+    @Prop({ type: [{ type: mongoose.Schema.Types.String }], default: RolesEnum.User })
     roles: RolesEnum[]
 }
 

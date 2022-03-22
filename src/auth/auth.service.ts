@@ -1,61 +1,77 @@
-import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { BadRequestException, HttpException, HttpStatus, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt'
+import { AuthCheckDto, AuthResponseDto, UserTokenData} from 'src/auth/dto/auth-response.dto';
+import { TokenService } from './token.service';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { AuthUserDto } from 'src/users/dto/auth-user.dto';
+import { User } from 'src/users/schemas/users.schema';
 
 @Injectable()
 export class AuthService {
+    constructor(private userService: UsersService, 
+                private tokenService: TokenService) {}
 
-    constructor(private usersService: UsersService,
-        private jwtService: JwtService) { }
-
-    async login(userDto: AuthUserDto) {
-        const user = await this.validateUser(userDto)
+    async signIn(userDto: AuthUserDto): Promise<AuthResponseDto> {
+        const { name, email, roles, group} = await this.validateUser(userDto)
+        const user: UserTokenData = { name, email, roles, group}
         return { 
             userData: user, 
-            token: await this.generateToken(user)
+            access: await this.tokenService.generateAccessToken(user), 
+            refresh: await this.tokenService.generateRefreshToken(user)
         }
     }
 
-    async registration(userDto: CreateUserDto) {
-        const candidate = await this.usersService.getUserByEmail(userDto.email)
+    async signUp(userDto: CreateUserDto): Promise<AuthResponseDto> {
+        const candidate = await this.userService.getUserByEmail(userDto.email)
         if (candidate) {
             throw new HttpException('User exist', HttpStatus.BAD_REQUEST)
         }
-
-        const hashPassword = await bcrypt.hash(userDto.password, 5)
-        const user = await this.usersService.createUser({ ...userDto, password: hashPassword })
+        const hashPassword = await bcrypt.hash(userDto.password, parseInt(process.env.SALT))
+        const { name, email, roles, group } = await this.userService.createUser({ ...userDto, password: hashPassword })
+        const user: UserTokenData = { name, email, roles, group }
         return { 
             userData: user, 
-            token: await this.generateToken(user)
+            access: await this.tokenService.generateAccessToken(user), 
+            refresh: await this.tokenService.generateRefreshToken(user)
+        }
+    }
+    
+    async refresh(refresh: string): Promise<AuthResponseDto> {        
+        const userData: UserTokenData  = await this.tokenService.validateRefreshToken(refresh)
+        const { name, email, roles, group } = await this.userService.getUserByEmail(userData.email)
+        if (!name) {
+            throw new HttpException('User not found', HttpStatus.BAD_REQUEST)
+        }
+        const user: UserTokenData = { name, email, roles, group }
+        return { 
+            userData: user, 
+            access: await this.tokenService.generateAccessToken(user), 
+            refresh: await this.tokenService.generateRefreshToken(user)
         }
     }
 
-    private async generateToken(user) {
-        const payload = { 
-            _id: user._id,
-            email: user.email,
-            name: user.name,
-            group: user.group,
-            roles: user.roles
+    async checkIsSignedIn(access: string): Promise<AuthCheckDto> {
+        const userData: UserTokenData  = await this.tokenService.validateAccessToken(access)
+        const { name, email, roles, group } = await this.userService.getUserByEmail(userData.email)
+        if (!name) {
+            throw new HttpException('User not found', HttpStatus.UNAUTHORIZED)
         }
-        return {
-            token: this.jwtService.sign(payload)
+        const user: UserTokenData = { name, email, roles, group }
+        return { 
+            userData: user
         }
     }
 
-    private async validateUser(userDto: AuthUserDto) {
-        const user = await this.usersService.getUserByEmail(userDto.email);
-
-        if (user) {
-            const passwordEquals = await bcrypt.compare(userDto.password, user.password);
-            if (passwordEquals) {
-                return user
-            }
+    private async validateUser(userDto: AuthUserDto): Promise<User> {
+        const user: User  = await this.userService.getUserByEmail(userDto.email)
+        const passwordsEqual = await bcrypt.compare(userDto.password, user.password)
+        if (!user) {
+            throw new BadRequestException({ message: 'User not found' })
         }
-
-        throw new UnauthorizedException({ message: "Wrong name or password" })
+        if (!passwordsEqual) {
+            throw new BadRequestException({ message: 'Wrong password' })
+        }
+        return user
     }
 }

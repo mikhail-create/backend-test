@@ -1,9 +1,10 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthUserDto } from 'src/users/dto/auth-user.dto';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { User } from 'src/users/schemas/users.schema';
 import { AuthService } from './auth.service';
+import { RefreshDto } from './dto/tokens.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -17,7 +18,14 @@ export class AuthController {
     @ApiBody({ type: [AuthUserDto] })
     @Post('/login')
     login(@Body() userDto: AuthUserDto) {
-        return this.authService.login(userDto)
+        return this.authService.signIn(userDto)
+    }
+
+    @Post('/refresh')
+    refresh(@Body() tokensDto: RefreshDto) {
+        console.log(tokensDto);
+        const response = this.authService.refresh(tokensDto.refresh)
+        return response
     }
 
     @ApiOperation({ summary: 'New user registration' })
@@ -25,6 +33,6 @@ export class AuthController {
     @ApiBody({ type: [CreateUserDto] })
     @Post('/registration')
     registration(@Body() userDto: CreateUserDto) {
-        return this.authService.registration(userDto)
+        return this.authService.signUp(userDto)
     }
 }

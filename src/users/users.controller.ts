@@ -1,6 +1,5 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 import { RolesGuard } from 'src/auth/roles-guard/roles-guard';
 import { Roles } from 'src/auth/roles-guard/roles-auth.decorator';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -21,7 +20,6 @@ export class UsersController {
         return this.userService.getAllUsers()
     }
 
-    @UseGuards(JwtAuthGuard)
     @Get(':id')
     findOne(@Param('id') id: string) {
       return this.userService.getUserById(id)

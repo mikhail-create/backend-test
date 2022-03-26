@@ -6,13 +6,14 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { RolesEnum } from './schemas/roles.enum';
 import { User } from './schemas/users.schema';
 import { UsersService } from './users.service';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('users')
 export class UsersController {
-    constructor(private readonly userService: UsersService){}
+    constructor(private readonly userService: UsersService) { }
 
-    @ApiOperation({summary: 'Getting all users'})
-    @ApiResponse({status: 200, type: [User]})
+    @ApiOperation({ summary: 'Getting all users' })
+    @ApiResponse({ status: 200, type: [User] })
     @Roles(RolesEnum.Admin)
     @UseGuards(RolesGuard)
     @Get()
@@ -20,13 +21,18 @@ export class UsersController {
         return this.userService.getAllUsers()
     }
 
-    @Get(':id')
-    findOne(@Param('id') id: string) {
-      return this.userService.getUserById(id)
+    @Get(':email')
+    findOne(@Param('email') email: string) {
+        return this.userService.getUserByEmail(email)
     }
 
-    @ApiOperation({summary: 'Creating new user'})
-    @ApiResponse({status: 200, type: User})
+    @Post(':email')
+    updateUser(@Param('email') email: string, @Body() userDto: UpdateUserDto) {
+        return this.userService.updateByEmail(email, userDto)
+    }
+
+    @ApiOperation({ summary: 'Creating new user' })
+    @ApiResponse({ status: 200, type: User })
     @Post()
     createUser(@Body() userDto: CreateUserDto) {
         return this.userService.createUser(userDto)

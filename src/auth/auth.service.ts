@@ -13,8 +13,8 @@ export class AuthService {
                 private tokenService: TokenService) {}
 
     async signIn(userDto: AuthUserDto): Promise<AuthResponseDto> {
-        const { name, email, roles, group} = await this.validateUser(userDto)
-        const user: UserTokenData = { name, email, roles, group}
+        const {name, email, roles, group} = await this.validateUser(userDto)
+        const user: UserTokenData = {name, email, roles, group}
         return { 
             userData: user, 
             access: await this.tokenService.generateAccessToken(user), 

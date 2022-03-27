@@ -39,6 +39,9 @@ export class User {
         previousEducationYear: string,
         phone: string
     }]
+
+    @Prop({ required: false })
+    files: string[]
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

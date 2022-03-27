@@ -23,7 +23,6 @@ export class AuthController {
 
     @Post('/refresh')
     refresh(@Body() tokensDto: RefreshDto) {
-        console.log(tokensDto);
         const response = this.authService.refresh(tokensDto.refresh)
         return response
     }

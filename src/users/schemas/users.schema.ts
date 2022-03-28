@@ -41,7 +41,13 @@ export class User {
     }]
 
     @Prop({ required: false })
-    files: string[]
+    files: [
+        {
+            name: string
+            path: string
+            semester: string
+        }
+    ]
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

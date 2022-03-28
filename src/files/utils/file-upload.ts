@@ -2,7 +2,7 @@ import { extname } from 'path';
 import { HttpException, HttpStatus } from '@nestjs/common';
 
 export const imageFileFilter = (req, file, callback) => {
-    if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+    if (!file.originalname.match(/\.(jpg|jpeg|png|gif|pdf|txt|docx)$/)) {
         return callback(
             new HttpException(
                 'Only image files are allowed!',
@@ -13,6 +13,7 @@ export const imageFileFilter = (req, file, callback) => {
     }
     callback(null, true);
 };
+
 export const editFileName = (req, file, callback) => {
     const name = file.originalname.split('.')[0];
     const fileExtName = extname(file.originalname);

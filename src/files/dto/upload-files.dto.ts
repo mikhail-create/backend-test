@@ -1,3 +1,5 @@
 export class UploadFileDto {
-    readonly path: string;
+    readonly name: string
+    readonly semester: string
+    path: string
 }

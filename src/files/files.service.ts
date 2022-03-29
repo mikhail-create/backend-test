@@ -15,7 +15,17 @@ export class FilesService {
     }
 
     async getFilesByEmail(email: string) {
+        let uniqueCourses = []
+        let courses = new Object();
         const user = await this.userModel.findOne({ email: email, include: { files: true } })
-        return user.files;
+        for (let item of user.files) {
+            if (!uniqueCourses.includes(item.course)) {
+                uniqueCourses.push(item.course)
+                courses[item.course] = []
+            }
+            courses[item.course].push(item)
+        }
+        return courses
     }
+
 }

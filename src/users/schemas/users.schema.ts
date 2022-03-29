@@ -43,6 +43,7 @@ export class User {
     @Prop({ required: false })
     files: [
         {
+            course: string
             name: string
             path: string
             semester: string

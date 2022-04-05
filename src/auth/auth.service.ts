@@ -65,10 +65,10 @@ export class AuthService {
 
     private async validateUser(userDto: AuthUserDto): Promise<User> {
         const user: User  = await this.userService.getUserByEmail(userDto.email)
-        const passwordsEqual = await bcrypt.compare(userDto.password, user.password)
         if (!user) {
             throw new BadRequestException({ message: 'User not found' })
         }
+        const passwordsEqual = await bcrypt.compare(userDto.password, user.password)
         if (!passwordsEqual) {
             throw new BadRequestException({ message: 'Wrong password' })
         }

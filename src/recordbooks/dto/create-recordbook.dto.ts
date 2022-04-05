@@ -8,6 +8,9 @@ export class CreateRecordbookDto {
     readonly librarycard: string
 
     readonly semesters: {
+        average: number,
+        rating: number,
+        attendance: number,
         exams: {
             nameOfCourse: string,
             hourse: number,
@@ -16,7 +19,6 @@ export class CreateRecordbookDto {
             date: string,
             teacher: string
         }[],
-
         offset: {
             nameOfCourse: string,
             hourse: number,

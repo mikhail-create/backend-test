@@ -29,6 +29,9 @@ export class RecordBook {
 
     @Prop({ required: true })
     semesters: {
+        average: number,
+        rating: number,
+        attendance: number,
         exams: {
             nameOfCourse: string,
             hours: number,

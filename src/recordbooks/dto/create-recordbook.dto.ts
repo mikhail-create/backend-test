@@ -13,7 +13,7 @@ export class CreateRecordbookDto {
         attendance: number,
         exams: {
             nameOfCourse: string,
-            hourse: number,
+            hours: number,
             rating: number,
             rate: string,
             date: string,
@@ -21,12 +21,11 @@ export class CreateRecordbookDto {
         }[],
         offset: {
             nameOfCourse: string,
-            hourse: number,
+            hours: number,
             rating: number,
             rate: string,
             date: string,
             teacher: string
         }[]
     }[]
-
 }

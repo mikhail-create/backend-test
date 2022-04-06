@@ -13,6 +13,6 @@ export class RecordBookController {
 
   @Post('/recordbooks')
   createRecordbook(@Body() dto: CreateRecordbookDto) {
-      return this.recordbookService.createUser(dto)
+      return this.recordbookService.createRecordBook(dto)
   }
 }

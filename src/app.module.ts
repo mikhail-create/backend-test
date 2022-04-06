@@ -7,6 +7,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { FilesModule } from './files/files.module';
 import { RecordBookModule } from './recordbooks/recordbooks.module';
+import { TasksModule } from './tasks/tasks.module';
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { RecordBookModule } from './recordbooks/recordbooks.module';
     MongooseModule.forRoot(process.env.URI),
     AuthModule,
     FilesModule,
-    RecordBookModule
+    RecordBookModule,
+    TasksModule
   ],
   controllers: [AppController],
   providers: [AppService],

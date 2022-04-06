@@ -1,9 +1,8 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { AuthModule } from 'src/auth/auth.module';
 import { RecordBookController } from './recordbooks.contoller';
 import { RecordBookService } from './recordbooks.service';
-import { RecordBook, RecordBookSchema } from './schemas/recordboos.schema';
+import { RecordBook, RecordBookSchema } from './schemas/recordbooks.schema';
 
 @Module({
     providers: [RecordBookService],

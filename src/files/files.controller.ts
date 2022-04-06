@@ -13,7 +13,7 @@ export class FilesController {
     @UseInterceptors(
         FileInterceptor('file', {
             storage: diskStorage({
-                destination: './uploads',
+                destination: './uploads/students',
                 filename: editFileName,
             }),
             fileFilter: imageFileFilter,
@@ -22,7 +22,7 @@ export class FilesController {
     async uploadedFile(
         @Param('email') email: string,
         @UploadedFile() file: any, @Body() uploadFileDto: UploadFileDto) {
-        const filePath = "http://localhost:5000/uploads/" + file.filename
+        const filePath = "http://localhost:5000/uploads/students/" + file.filename
         return this.filesService.uploadFileByUser(email, uploadFileDto, filePath)
     }
 
@@ -30,6 +30,5 @@ export class FilesController {
     getImage(@Param('email') email: string) {
         const user = this.filesService.getFilesByEmail(email)
         return user
-        // const file = res.sendFile(, { root: './uploads' });
     }
 }

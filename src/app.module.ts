@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { FilesModule } from './files/files.module';
 import { RecordBookModule } from './recordbooks/recordbooks.module';
 import { TasksModule } from './tasks/tasks.module';
+import { ChatGateway } from './chat.gateway';
 
 @Module({
   imports: [
@@ -22,7 +23,7 @@ import { TasksModule } from './tasks/tasks.module';
     TasksModule
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, ChatGateway],
 })
 
 export class AppModule {}

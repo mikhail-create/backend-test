@@ -21,7 +21,7 @@ export class TasksService {
     }
 
     async getTaskByGroup(group: string): Promise<TaskList[]> {
-        return this.taskModel.find({ group: group }).exec()
+        return this.taskModel.find({ groups: group }).exec()
     }
 
     async getTaskById(_id: string) {

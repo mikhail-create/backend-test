@@ -6,6 +6,16 @@ import { RolesEnum } from "./roles.enum";
 
 export type UserDocument = User & Document
 
+class FullDataUser {
+    passportSeries: string
+    passportNumber: string
+    adress: string
+    previousEducation: string
+    previousEducationPlace: string
+    previousEducationYear: string
+    phone: string
+}
+
 @Schema()
 export class User {
 
@@ -29,16 +39,16 @@ export class User {
     @Prop({ type: [{ type: mongoose.Schema.Types.String }], default: RolesEnum.User })
     roles: RolesEnum[]
 
-    @Prop({ required: false })
-    fullData: [{
-        passportSeries: string,
-        passportNumber: string,
-        adress: string,
-        previousEducation: string,
-        previousEducationPlace: string,
-        previousEducationYear: string,
-        phone: string
-    }]
+    @Prop({ required: false, default: {
+        passportSeries: "",
+        passportNumber: "",
+        adress: "",
+        previousEducation: "",
+        previousEducationPlace: "",
+        previousEducationYear: "",
+        phone: ""
+    } })
+    fullData: FullDataUser
 
     @Prop({ required: false })
     files: [

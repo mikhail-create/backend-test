@@ -16,4 +16,7 @@ export class Task {
 
     @Prop({ required: true })
     author: string
+
+    @Prop({ required: false })
+    author_id: string
 }

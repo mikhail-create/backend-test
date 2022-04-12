@@ -9,4 +9,5 @@ export class TaskDto {
     file: string
     readonly date: Date
     readonly author: string
+    readonly author_id: string
 }

@@ -18,6 +18,10 @@ class FullDataUser {
 
 @Schema()
 export class User {
+
+    @Prop({ required: false })
+    _id: mongoose.Types.ObjectId
+
     @ApiProperty({ example: 'test@mail.test', description: 'User email' })
     @Prop({ required: true })
     email: string

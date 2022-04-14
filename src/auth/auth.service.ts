@@ -13,8 +13,8 @@ export class AuthService {
                 private tokenService: TokenService) {}
 
     async signIn(userDto: AuthUserDto): Promise<AuthResponseDto> {
-        const {name, email, roles, group} = await this.validateUser(userDto)
-        const user: UserTokenData = {name, email, roles, group}
+        const {_id, name, email, roles, group} = await this.validateUser(userDto)
+        const user: UserTokenData = {_id, name, email, roles, group}
         return { 
             userData: user, 
             access: await this.tokenService.generateAccessToken(user), 
@@ -28,8 +28,8 @@ export class AuthService {
             throw new HttpException('User exist', HttpStatus.BAD_REQUEST)
         }
         const hashPassword = await bcrypt.hash(userDto.password, parseInt(process.env.SALT))
-        const { name, email, roles, group } = await this.userService.createUser({ ...userDto, password: hashPassword })
-        const user: UserTokenData = { name, email, roles, group }
+        const {_id, name, email, roles, group} = await this.userService.createUser({ ...userDto, password: hashPassword })
+        const user: UserTokenData = {_id, name, email, roles, group}
         return { 
             userData: user, 
             access: await this.tokenService.generateAccessToken(user), 
@@ -39,11 +39,11 @@ export class AuthService {
     
     async refresh(refresh: string): Promise<AuthResponseDto> {        
         const userData: UserTokenData  = await this.tokenService.validateRefreshToken(refresh)
-        const { name, email, roles, group } = await this.userService.getUserByEmail(userData.email)
+        const {_id, name, email, roles, group} = await this.userService.getUserByEmail(userData.email)
         if (!name) {
             throw new HttpException('User not found', HttpStatus.BAD_REQUEST)
         }
-        const user: UserTokenData = { name, email, roles, group }
+        const user: UserTokenData = {_id, name, email, roles, group}
         return { 
             userData: user, 
             access: await this.tokenService.generateAccessToken(user), 
@@ -53,11 +53,11 @@ export class AuthService {
 
     async checkIsSignedIn(access: string): Promise<AuthCheckDto> {
         const userData: UserTokenData  = await this.tokenService.validateAccessToken(access)
-        const { name, email, roles, group } = await this.userService.getUserByEmail(userData.email)
+        const {_id, name, email, roles, group} = await this.userService.getUserByEmail(userData.email)
         if (!name) {
             throw new HttpException('User not found', HttpStatus.UNAUTHORIZED)
         }
-        const user: UserTokenData = { name, email, roles, group }
+        const user: UserTokenData = {_id, name, email, roles, group}
         return { 
             userData: user
         }

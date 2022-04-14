@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import mongoose from 'mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from 'src/users/schemas/users.schema';
 import { UsersService } from 'src/users/users.service';
@@ -20,9 +21,9 @@ export class ChatService {
     }
 
     async getRoom(sender_id: string, user_id: string) {
-        console.log(sender_id, user_id);
         const user = await this.userService.getUserById(sender_id);
         const second_user = await this.userService.getUserById(user_id);
+
         const room = user.dialoges.find(dialog => dialog.users[0].user_id === user_id || dialog.users[1].user_id === user_id);
         if (room) {
             return room;
@@ -32,8 +33,17 @@ export class ChatService {
                 users: [{ user_id: user_id, name: second_user.name }, { user_id: sender_id, name: user.name }],
                 messages: []
             }
-            const updatedUsers = await this.userModel.updateMany({ _id: { $in: [sender_id, user_id] } }, { $push: { dialoges: newRoom } });
-            return newRoom.room_id;
+            const updatedUsers = await this.userModel.updateMany({
+                _id: {
+                    $in: [
+                        new mongoose.Types.ObjectId(sender_id),
+                        new mongoose.Types.ObjectId(user_id)
+                    ]
+                }
+            }, {
+                $push: { dialoges: newRoom }
+            });
+            return updatedUsers;
         }
     }
 }

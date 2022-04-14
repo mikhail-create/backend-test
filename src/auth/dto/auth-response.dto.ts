@@ -1,3 +1,4 @@
+import mongoose from "mongoose"
 import { RolesEnum } from "../../users/schemas/roles.enum"
 
 export type AuthResponseDto = {
@@ -7,6 +8,7 @@ export type AuthResponseDto = {
 }
 
 export type UserTokenData = {
+    readonly _id: mongoose.Types.ObjectId
     readonly name: string
     readonly email: string
     readonly group: string

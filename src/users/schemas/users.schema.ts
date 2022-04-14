@@ -18,7 +18,6 @@ class FullDataUser {
 
 @Schema()
 export class User {
-
     @ApiProperty({ example: 'test@mail.test', description: 'User email' })
     @Prop({ required: true })
     email: string
@@ -39,15 +38,17 @@ export class User {
     @Prop({ type: [{ type: mongoose.Schema.Types.String }], default: RolesEnum.User })
     roles: RolesEnum[]
 
-    @Prop({ required: false, default: {
-        passportSeries: "",
-        passportNumber: "",
-        adress: "",
-        previousEducation: "",
-        previousEducationPlace: "",
-        previousEducationYear: "",
-        phone: ""
-    } })
+    @Prop({
+        required: false, default: {
+            passportSeries: "",
+            passportNumber: "",
+            adress: "",
+            previousEducation: "",
+            previousEducationPlace: "",
+            previousEducationYear: "",
+            phone: ""
+        }
+    })
     fullData: FullDataUser
 
     @Prop({ required: false })
@@ -59,6 +60,19 @@ export class User {
             semester: string
         }
     ]
+
+    @Prop({ required: false, default: [] })
+    dialoges: {
+        room_id: string
+        users: {
+            user_id: string
+            name: string
+        }[]
+        messages: {
+            author: string
+            message: string
+        }[]
+    }[]
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

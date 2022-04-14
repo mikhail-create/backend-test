@@ -31,7 +31,7 @@ export class UsersService {
     }
 
     async updateByEmail(email: string, updateUserDto: UpdateUserDto) {
-        const updatedUser = this.userModel.findOneAndUpdate({ email }, updateUserDto, { new: false });
+        const updatedUser = await this.userModel.findOneAndUpdate({ email }, updateUserDto, { new: false });
         return updatedUser
     }
 }

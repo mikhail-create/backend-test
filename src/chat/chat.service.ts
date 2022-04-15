@@ -6,6 +6,7 @@ import { User, UserDocument } from 'src/users/schemas/users.schema';
 import { UsersService } from 'src/users/users.service';
 import { v4 } from 'uuid';
 import { ChatUpdateDto } from './dto/chat-update.dto';
+import { MessageTypes } from './types/message.type';
 
 @Injectable()
 export class ChatService {
@@ -16,8 +17,18 @@ export class ChatService {
         return user.dialoges;
     }
 
-    async updateChat(chat: ChatUpdateDto) {
+    async checkAccess(email: string, room_id: string) {
+        const user = await this.userService.getUserByEmail(email);
+        if (user.dialoges.find(dialog => dialog.room_id === room_id)) {
+            return true;
+        } else {
+            return
+        }
+    }
 
+    async updateChat(message: MessageTypes) {
+
+        return
     }
 
     async getRoom(sender_id: string, user_id: string) {

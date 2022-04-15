@@ -12,6 +12,7 @@ export class UsersService {
     }
 
     async createUser(dto: CreateUserDto): Promise<User> {
+        dto._id = new mongoose.Types.ObjectId()
         const newUser = new this.userModel(dto)
         return newUser.save()
     }

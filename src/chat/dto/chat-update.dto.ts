@@ -5,7 +5,7 @@ export class ChatUpdateDto {
         name: string
     }[]
     messages: {
-        author: string
+        name: string
         message: string
     }[]
 }

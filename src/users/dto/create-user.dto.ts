@@ -1,6 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
+import mongoose from "mongoose";
 
 export class CreateUserDto {
+    _id: mongoose.Types.ObjectId;
+
     @ApiProperty({example: 'test@mail.test', description: 'User email'})
     readonly email: string;
 

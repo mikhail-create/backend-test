@@ -1,6 +1,5 @@
 import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { ChatService } from './chat.service';
-import { ChatUpdateDto } from './dto/chat-update.dto';
 
 @Controller()
 export class ChatController {
@@ -11,9 +10,14 @@ export class ChatController {
         return this.chatService.getRoom(sender_id, user_id)
     }
 
+    @Get('/chat/get/:email/:room_id')
+    getDialog(@Param('email') email: string, @Param('room_id') room_id: string) {
+        return this.chatService.getDialogData(email, room_id)
+    }
+
     @Get('/chat/get/:email')
-    getChat(@Param('email') email: string) {
-        return this.chatService.getChatsById(email)
+    getDialogsList(@Param('email') email: string) {
+        return this.chatService.getDialogsList(email)
     }
 
 }

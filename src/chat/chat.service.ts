@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { log } from 'console';
 import mongoose from 'mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from 'src/users/schemas/users.schema';
@@ -12,7 +13,14 @@ import { MessageTypes } from './types/message.type';
 export class ChatService {
     constructor(private readonly userService: UsersService, @InjectModel(User.name) private userModel: Model<UserDocument>) { }
 
-    async getChatsById(email: string) {
+    async getDialogData(email: string, id: string) {
+        const user = await this.userService.getUserByEmail(email);
+        const dialog = user.dialoges.find(dialog => dialog.room_id === id);
+        console.log(dialog);
+        return dialog;
+    }
+
+    async getDialogsList(email: string) {
         const user = await this.userService.getUserByEmail(email);
         return user.dialoges;
     }
@@ -26,9 +34,36 @@ export class ChatService {
         }
     }
 
-    async updateChat(message: MessageTypes) {
+    async updateChat(data: MessageTypes) {
+        const user = await this.userService.getUserByEmail(data.email);
+        const room = user.dialoges.find(dialog => dialog.room_id === data.room_id);
+        const users = room.users.map(user => new mongoose.Types.ObjectId(user.user_id));
+        console.log(data);
+        const newMessage = {
+            author: data.name,
+            message: data.message,
+        }
 
-        return
+        const updatedUser = await this.userModel.updateMany(
+            {
+                _id: { $in: users },
+                dialoges: {
+                    $elemMatch: {
+                        room_id: data.room_id
+                    }
+                }
+            },
+            {
+                $push: {
+                    'dialoges.$.messages': newMessage
+                },
+            },
+            {
+                new: true
+            }
+        );
+
+        return updatedUser;
     }
 
     async getRoom(sender_id: string, user_id: string) {

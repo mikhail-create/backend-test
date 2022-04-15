@@ -34,9 +34,9 @@ export class ChatGateway {
         if (data) {
             this.chatService.checkAccess(data.email, data.room_id).then(res => {
                 if (res) {
-                    const name = data.name;
+                    const author = data.name;
                     const message = data.message
-                    this.server.in(data.room_id).emit('message', { name, message });
+                    this.server.in(data.room_id).emit('message', { author, message });
                     this.chatService.updateChat(data)
                 } else {
                     return new WsException('You are not in this room');
